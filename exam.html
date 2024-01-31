@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title and Date Input</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      .container {
+          max-width: 600px;
+          margin: 50px auto;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 15px;
+          background-color: #9cbdef;
+      }
+      label {
+          font-weight: bold;
+      }
+      input[type="text"],input[type="date"], button {
+          margin: 10px;
+          border-radius: 10px;
+          padding: 8px;
+          box-sizing: border-box;
+      }
+      #description{
+          margin: 10px;
+          width: 335px;
+      }
+      button {
+          background-color: #104266;
+          color: white;
+          border: none;
+          width: 80px;
+          cursor: pointer;
+      }
+      button:hover {
+          background-color: #124f6e;
+      }
+      #days {
+          display: flex;
+          padding: 2px;
+          margin-left: 450px;
+      }
+      .day:hover {
+          opacity: 0.7;
+      }
+      .day {
+          background-color: #9cbdef;
+          padding: 2px;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border-radius: 20%;
+          cursor: pointer;
+          margin-right: 52px;
+      }
+      #outputs{
+          max-width: 600px;
+          margin: 50px auto;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 15px;
+          background-color: #c7d4e6;
+      }
+      #outputs {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 15px;
+      background-color: #c7d4e6;
+      position: relative;
+      }
+
+      #Delete {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+      }
+
+
+  </style>
+</head>
+<body>
+    <div class="container">
+        <input type="text" id="title" placeholder="Title" />
+        <input type="date" id="date" required>
+        <br>
+        <input type="text" id="description" placeholder="Description" required>
+        <button id="save">Save</button>
+    </div>
+    <div id="days">
+        <div class="day" data-day="sun">SUN</div>
+        <div class="day" data-day="mon">MON</div>
+        <div class="day" data-day="tue">TUE</div>
+        <div class="day" data-day="wed">WED</div>
+        <div class="day" data-day="thu">THU</div>
+        <div class="day" data-day="fri">FRI</div>
+        <div class="day" data-day="sat">SAT</div>
+    </div>
+    <div id="outputs"> 
+      <button id="deleteButton">Delete</button>
+    </div>
+    <br>
+
+
+    <script>
+        var items = []; 
+
+        document.getElementById("save").addEventListener("click", function() {
+            var title = document.getElementById("title").value;
+            var date = document.getElementById("date").value;
+            var description = document.getElementById("description").value;
+
+            var selectedDate = new Date(date);
+            var today = new Date();
+
+            if (selectedDate == today || selectedDate < today) {
+                alert("Selected date is in the past or today. Please choose a future date.");
+                return; 
+            }
+
+            var dayIndex = selectedDate.getDay(); 
+            var daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            var selectedDay = daysOfWeek[dayIndex];
+
+            items.push({
+                title: title,
+                description: description,
+                selectedDay: selectedDay,
+            });
+            displayItems();
+        });
+
+        function displayItems() {
+            var outputsContainer = document.getElementById("outputs");
+            outputsContainer.innerHTML = ""; 
+
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+
+                var newItem = document.createElement("div");
+                newItem.className = "output-item";
+                newItem.innerHTML = "<h3>Title: " + item.title + "</h3><p>Description: " + item.description + "<br>"+ "</p>" +
+                                     "<p>Selected Day: " + item.selectedDay ;
+                outputsContainer.appendChild(newItem);
+                var deleteButton = document.createElement("button");
+                deleteButton.className = "delete-button";
+                deleteButton.innerText = "Delete";
+                deleteButton.addEventListener("click", createDeleteHandler(i));
+
+                newItem.appendChild(deleteButton);
+            }
+        }
+        function createDeleteHandler(index) {
+            return function() {
+                items.splice(index, 1);
+                displayItems();
+            };
+        }
+
+
+    </script>
+</body>
+</html>
